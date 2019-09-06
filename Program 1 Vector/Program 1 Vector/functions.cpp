@@ -76,7 +76,7 @@ double GetAverage(myvector<int> V)
     
     for (int i = 0; i < V.size(); ++i)
     {
-        sum += V.at(i);
+        sum += V[i];
     }
     
     if (V.size() == 0)  // beware of divide-by-0:
@@ -106,7 +106,7 @@ myvector<int> GetNumStars(myvector<int> reviews)
     // let's make sure all the counts are initialized to 0:
     for (int i = 0; i < numstars.size(); ++i)
     {
-        numstars.at(i) = 0;
+        numstars[i] = 0;
     }
     
     //
@@ -114,9 +114,9 @@ myvector<int> GetNumStars(myvector<int> reviews)
     //
     for (int i = 0; i < reviews.size(); ++i)
     {
-        int star = reviews.at(i);  // 1-5:
+        int star = reviews[i];  // 1-5:
         
-        numstars.at(star - 1)++;   // index 0-4:
+        numstars[star - 1]++;   // index 0-4:
     }
     
     // return counts:

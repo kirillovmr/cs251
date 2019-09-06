@@ -70,9 +70,9 @@ int main()
         // i is 5, 4, 3, 2, 1:
         //
         if (i == 1)
-            cout << i << " star:  " << numstars.at(i - 1) << endl;
+            cout << i << " star:  " << numstars[i - 1] << endl;
         else
-            cout << i << " stars: " << numstars.at(i - 1) << endl;
+            cout << i << " stars: " << numstars[i - 1] << endl;
     }
     
     return 0;
