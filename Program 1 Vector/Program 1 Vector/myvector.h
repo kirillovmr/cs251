@@ -8,8 +8,11 @@
 // Project #01: myvector class that mimics std::vector, but with my own
 // implemenation outlined as follows:
 //
-// ???
-//
+// [Node]  ->  [Node] -> nullptr
+//  |             |
+//  -> [Array]    -> [Array]
+
+// Test 20 - erase all elements and then build up a new vector: test failed (myvector incorrect).
 
 #pragma once
 
@@ -26,81 +29,44 @@ private:
         Node *pNext = nullptr;
     };
     
-    Node *node;
-    int Size;
-    int Capacity;
+    Node *head, *tail, *prevNode = nullptr;
+    int Size, Capacity, prevNodeIndex = -1;
     
 public:
     // default constructor:
     myvector() {
-        node = new Node;
-        node->A = new T[4];
-        Size = 0;
-        Capacity = 4;
+        head = new Node; tail = head;
+        head->A = new T[4];
+        
+        Size = 0; Capacity = 4;
     }
     
     // constructor with initial size:
     myvector(int initial_size) {
-        node = new Node;
-        node->A = new T[initial_size];
-        Size = initial_size;
-        Capacity = initial_size;
+        head = new Node; tail = head;
+        head->A = new T[initial_size];
+        
+        Size = initial_size; Capacity = initial_size;
     }
     
     // copy constructor for parameter passing:
-    myvector(const myvector& other) {
+    myvector (const myvector& other) {
+        head = new Node; tail = head;
+        head->A = new T[other.Capacity];
         
-        Node *prevNode = nullptr, *thisNode = node;
-        Node const *otherNode = other.node;
+        Size = 0; Capacity = other.Capacity;
         
-        // Clearing vector if it is not empty
-        if (Size) {
-            while (thisNode) {
-                if (prevNode)
-                    deleteNode(prevNode);
-                
-                prevNode = thisNode;
-                thisNode = thisNode->pNext;
-            }
-        }
-        
-        Size = 0;
-        Capacity = other.Capacity;
-        node = new Node;
-        thisNode = node;
-
-        // Going through nodes
+        Node *otherNode = other.head;
         while(otherNode != nullptr) {
-
-            // Creating node if needed
-            if (thisNode == nullptr) {
-                thisNode = new Node;
-                prevNode->pNext = thisNode;
-            }
-
-            // Initializing new array
-            thisNode->A = new T[Capacity];
-
-            for (int i=0; i<other.Capacity; i++) {
-                if (Size < other.Size) {
-                    thisNode->A[i] = otherNode->A[i];
-                    Size++;
-                }
-            }
-
-            prevNode = thisNode;
-            thisNode = thisNode->pNext;
+            for (int i=0; i<other.Capacity; i++)
+                if (size() < other.Size)
+                    push_back( otherNode->A[i] );
             otherNode = otherNode->pNext;
         }
     }
     
-    // returns a reference to the element at position i
-    T& operator[](int i) {
-        return at(i);
-    }
-    
     void displayAll() {
-        Node *current = node;
+        Node *current = head;
         
         int j = 0;
         while(current) {
@@ -115,45 +81,47 @@ public:
         }
     }
     
-    int size() {
+    size_t size() {
         return Size;
+    }
+    
+    // returns a reference to the element at position i
+    T& operator[](int i) {
+        return at(i);
     }
     
     T& at(int i) {
         // Getting responsible node index
         int nodeIndex = i / Capacity;
         int elementIndex = i % Capacity;
-        Node *currentNode = node;
         
-        // Going to appropriate node
-        while (nodeIndex > 0) {
-            currentNode = currentNode->pNext;
-            nodeIndex--;
+        if (prevNodeIndex > nodeIndex || prevNodeIndex <= 0) {
+            prevNodeIndex = 0;
+            prevNode = head;
         }
         
-        return *(currentNode->A+elementIndex);
+        // Going to appropriate node
+        while (prevNodeIndex < nodeIndex) {
+            prevNode = prevNode->pNext;
+            prevNodeIndex++;
+        }
+        
+        return *(prevNode->A+elementIndex);
     }
     
     void push_back(T value) {
-        // Getting responsible node index
-        int nodeIndex = Size / Capacity;
         int elementIndex = Size % Capacity;
-        Node *currentNode = node;
         
-        // Going to appropriate node
-        while (nodeIndex > 0) {
-            
-            // Creating next node if needed
-            if (currentNode->pNext == nullptr) {
-                currentNode->pNext = new Node;
-                currentNode->pNext->A = new T[Capacity];
-            }
-            
-            currentNode = currentNode->pNext;
-            nodeIndex--;
+        // Creating next node if needed
+        if (elementIndex == 0 && Size > 0)  {
+//            cout << "Z\n";
+            tail->pNext = new Node;
+            tail->pNext->A = new T[Capacity];
+            tail = tail->pNext;
         }
+//        cout << "index " << elementIndex << endl;
         
-        currentNode->A[elementIndex] = value;
+        tail->A[elementIndex] = value;
         Size++;
     }
     
@@ -169,7 +137,7 @@ public:
         
         int nodeIndex = i / Capacity;
         int elementIndex = i % Capacity;
-        Node *currentNode = node;
+        Node *currentNode = head;
         
         // Going to appropriate node
         while (nodeIndex > 0) {
@@ -202,7 +170,7 @@ public:
         
         int nodeIndex = i / Capacity;
         int elementIndex = i % Capacity;
-        Node *currentNode = node, *previousNode;
+        Node *currentNode = head, *previousNode;
         
         // Going to appropriate node
         while (nodeIndex > 0) {
@@ -217,6 +185,8 @@ public:
             deleteNode(currentNode);
             // Even that there is warning that wariable may be unitialized, it is initialized within this if statement
             previousNode->pNext = nullptr;
+            tail = previousNode;
+            cout << "P\n";
         }
         
         while (i+1 < Size) {
@@ -234,6 +204,7 @@ public:
                     // Deleting next node if it had only 1 element
                     deleteNode(currentNode->pNext);
                     currentNode->pNext = nullptr;
+                    tail = currentNode;
                     break;
                 }
                 
