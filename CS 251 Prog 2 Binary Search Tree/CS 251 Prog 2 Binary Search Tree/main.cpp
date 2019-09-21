@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cctype>
 #include "bst.hpp"
 #define DEBUG 1
 
@@ -59,15 +60,15 @@ void InputMovies(string moviesFilename, binarysearchtree<int, MovieData> &bstID,
 		
 		MovieData *data = new MovieData{pubYear,0,0,0,0,0};
         
-        bstID.insert(id, MovieData{pubYear,0,0,0,0,0});
-		bstName.insert(name, MovieData{pubYear,0,0,0,0,0});
+        bstID.insert(id, data);
+		bstName.insert(name, data);
         
         moviesFile >> id;
     }
 	cout << "Num movies: " << bstID.size() << endl;
 }
 
-void inputRating(string filename, binarysearchtree<int, MovieData> &bstID, binarysearchtree<string, MovieData> &bstName) {
+void inputRating(string filename, binarysearchtree<int, MovieData> &bstID) {
 	ifstream reviewsFile(filename);
     int      reviewId, movieId, rating, numReviews = 0;
     string   name;
@@ -83,23 +84,23 @@ void inputRating(string filename, binarysearchtree<int, MovieData> &bstID, binar
 		reviewsFile >> rating;
 		
 		// inserting
-		MovieData *dataID = bstID.search(movieId);
+		MovieData **dataID = bstID.search(movieId);
 		if (dataID) {
 			switch (rating) {
 				case 1:
-					dataID->Num1Stars++;
+					(*dataID)->Num1Stars++;
 					break;
 				case 2:
-					dataID->Num2Stars++;
+					(*dataID)->Num2Stars++;
 					break;
 				case 3:
-					dataID->Num3Stars++;
+					(*dataID)->Num3Stars++;
 					break;
 				case 4:
-					dataID->Num4Stars++;
+					(*dataID)->Num4Stars++;
 					break;
 				case 5:
-					dataID->Num5Stars++;
+					(*dataID)->Num5Stars++;
 					break;
 				default:
 					break;
@@ -115,6 +116,18 @@ void inputRating(string filename, binarysearchtree<int, MovieData> &bstID, binar
 void displayBST(binarysearchtree<int, MovieData> bst) {
     bst.inorder();
     cout << bst.size() << " " << bst.height() << endl;
+}
+
+bool isThereCharacter(string input) {
+	const char *str = input.c_str();
+	int i = 0;
+	while(str[i]) {
+		if (isalpha(str[i]))
+			return true;
+		i++;
+	}
+	
+	return false;
 }
 
 
@@ -154,32 +167,47 @@ int main() {
         getline(cin, junk);  // discard EOL following last input:
     
     InputMovies(moviesFilename, bstID, bstName);
-	inputRating(reviewsFilename, bstID, bstName);
+	inputRating(reviewsFilename, bstID);
 	
 	cout << "\nTree by movie id: size=" << bstID.size() << ", height=" << bstID.height() << endl;
 	cout << "Tree by movie name: size=" << bstName.size() << ", height=" << bstName.height() << endl;
 	
-	string input;
+	string input, movieName;
+	int movieId;
+	MovieData **data;
+	
 	while (true) {
 		cout << "\nEnter a movie id or name (or # to quit)> ";
 		getline(cin, input);
 		trim(input);
 		
-		MovieData *data = bstName.search(input);
+		if (isThereCharacter(input)) {
+			movieName = input;
+			data = bstName.search(movieName);
+			movieId = -1;
+		}
+		else {
+			movieId = atoi(input.c_str());
+			movieName = "Unknown";
+			data = bstID.search(movieId);
+		}
+		
 		if (!data) {
 			cout << "not found..." << endl;
 			continue;
 		}
 		
-		cout << "Movie ID: " << 123 << endl
-			<< "Movie Name: " << input << endl
-			<< "Avg rating: " << 123 << endl
-			<< "5 stars: " << data->Num5Stars << endl
-			<< "4 stars: " << data->Num4Stars << endl
-			<< "3 stars: " << data->Num3Stars << endl
-			<< "2 stars: " << data->Num2Stars << endl
-			<< "1 stars: " << data->Num1Stars << endl;
+		double avgRating = (5.0*(*data)->Num5Stars + 4*(*data)->Num4Stars + 3*(*data)->Num3Stars + 2*(*data)->Num2Stars + (*data)->Num1Stars)
+							/ ((*data)->Num5Stars + (*data)->Num4Stars + (*data)->Num3Stars + (*data)->Num2Stars + (*data)->Num1Stars);
 		
+		cout << "Movie ID: " << movieId << endl
+			<< "Movie Name: " << movieName << endl
+			<< "Avg rating: " << avgRating << endl
+			<< "5 stars: " << (*data)->Num5Stars << endl
+			<< "4 stars: " << (*data)->Num4Stars << endl
+			<< "3 stars: " << (*data)->Num3Stars << endl
+			<< "2 stars: " << (*data)->Num2Stars << endl
+			<< "1 stars: " << (*data)->Num1Stars << endl;
 	}
     
     return 0;

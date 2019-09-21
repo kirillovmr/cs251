@@ -19,7 +19,7 @@ class binarysearchtree {
 private:
     struct NODE {
         TKey    Key;
-		TValue	Value;
+		TValue	*Value;
         NODE*   Left = nullptr;
         NODE*   Right = nullptr;
     };
@@ -36,7 +36,7 @@ private:
         else {
             _inorder(cur->Left);
             // cout << cur->Key << " ";
-            cout << cur->Key << ":" << cur->Value.Num5Stars << endl;
+            cout << cur->Key << ":" << cur->Value->Num5Stars << endl;
             _inorder(cur->Right);
         }
     }
@@ -106,7 +106,7 @@ public:
     
     // Searches the tree for the given key, returning true if found
     // and false if not.
-    TValue* search(TKey key) {
+    TValue** search(TKey key) {
         NODE* cur = Root;
         
         while (cur != nullptr) {
@@ -124,7 +124,7 @@ public:
     
     // Inserts the given key into the tree; if the key has already been insert then
     // the function returns without changing the tree.
-    void insert(TKey key, TValue value) {
+    void insert(TKey key, TValue *value) {
         NODE* prev = nullptr;
         NODE* cur = Root;
         
@@ -144,7 +144,7 @@ public:
         }
         
         // 2. if we get here, key is not in tree, so allocate a new node to insert:
-        NODE *newNode = new NODE{key, value};
+        NODE *newNode = new NODE{key, *&value};
         
         // 3. link in the new node:
         if (Root == nullptr)
