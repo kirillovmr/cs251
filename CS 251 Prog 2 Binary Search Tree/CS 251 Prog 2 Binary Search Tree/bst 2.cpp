@@ -7,3 +7,9 @@
 //
 
 #include "bst.hpp"
+
+//template<typename TKey, typename TValue>
+//binarysearchtree<TKey, TValue>::binarysearchtree() {
+//	Root = nullptr;
+//	Size = 0;
+//}

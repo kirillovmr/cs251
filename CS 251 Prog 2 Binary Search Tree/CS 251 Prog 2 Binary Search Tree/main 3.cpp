@@ -85,19 +85,7 @@ void displayBST(binarysearchtree<int, MovieData> bst) {
 
 
 int main() {
-//	int n = 3;
-//	switch (n) {
-//		case 1:
-//			cout << "1" << endl;
-//			break;
-//		case 2:
-//			cout << "2" << endl;
-//			break;
-//	}
-//	return 0;
-	
-	
-    srand(1);
+	srand(1);
     binarysearchtree<int, MovieData> bst;
     
 //    for (int i=0; i<30; i++) {

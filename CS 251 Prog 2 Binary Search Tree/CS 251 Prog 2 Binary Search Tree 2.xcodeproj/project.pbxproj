@@ -61,8 +61,8 @@
 			isa = PBXGroup;
 			children = (
 				E82CFFE02333CFFB00229C99 /* main.cpp */,
-				E8AF736D2336B90A006844A1 /* bst.cpp */,
 				E8AF736E2336B90A006844A1 /* bst.hpp */,
+				E8AF736D2336B90A006844A1 /* bst.cpp */,
 			);
 			path = "CS 251 Prog 2 Binary Search Tree";
 			sourceTree = "<group>";
