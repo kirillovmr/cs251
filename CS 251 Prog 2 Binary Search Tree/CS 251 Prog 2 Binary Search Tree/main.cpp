@@ -11,23 +11,20 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cctype>
 #include "bst.hpp"
 #define DEBUG 1
 
 using namespace std;
 
 struct MovieData {
-    int PubYear;
-    int Num5Stars;
-    int Num4Stars;
-    int Num3Stars;
-    int Num2Stars;
-    int Num1Stars;
+	string name;
+    int PubYear, id;
+	int numStars[5];
 };
 
 // trims whitespace from beginning and end of string.
-string trim(const string& str)
-{
+string trim(const string& str) {
     size_t first = str.find_first_not_of(" \t\n\r");
     size_t last = str.find_last_not_of(" \t\n\r");
     
@@ -41,98 +38,115 @@ string trim(const string& str)
     return str.substr(first, (last - first + 1));
 }
 
-
-
-// Inputs the data from the "movies" file, which contains N>0 lines, where
-// each line contains:
-//     id pubYear name
-void InputMovies(string moviesFilename, binarysearchtree<int, MovieData> &bst) {
+void InputMovies(string moviesFilename, binarysearchtree<int, MovieData> &bstID, binarysearchtree<string, MovieData> &bstName) {
     ifstream moviesFile(moviesFilename);
     int      id, pubYear;
     string   name;
     
-    if (!moviesFile.good())
-    {
+    if (!moviesFile.good()) {
         cout << "**Error: unable to open movies file '" << moviesFilename << "', exiting" << endl;
         return;
     }
     
-    moviesFile >> id;  // get first ID, or set EOF flag if file empty:
-    
-    while (!moviesFile.eof())
-    {
-        // we have more data, so input publication year and movie name:
+    moviesFile >> id;
+    while (!moviesFile.eof()) {
         moviesFile >> pubYear;
-        getline(moviesFile, name);  // movie name fills rest of input line:
-        
-        // trim potential whitespace from both ends of movie name:
+		
+        getline(moviesFile, name);
         name = trim(name);
+		
+		MovieData *data = new MovieData{name, pubYear, id, 0,0,0,0,0};
         
-        // debugging:
-//        cout << id << "," << pubYear << "," << name << endl;
+        bstID.insert(id, data);
+		bstName.insert(name, data);
         
-        // inserting
-        bst.insert(id, MovieData{pubYear,0,0,0,0,0});
-        
-        moviesFile >> id;  // get next ID, or set EOF flag if no more data:
+        moviesFile >> id;
     }
+	cout << "Num movies: " << bstID.size() << endl;
 }
 
-void displayBST(binarysearchtree<int, MovieData> bst) {
-    bst.inorder();
-    cout << bst.size() << " " << bst.height() << endl;
+void inputRating(string filename, binarysearchtree<int, MovieData> &bstID) {
+	ifstream reviewsFile(filename);
+    int      reviewId, movieId, rating, numReviews = 0;
+    string   name;
+    
+    if (!reviewsFile.good()) {
+        cout << "**Error: unable to open movies file '" << filename << "', exiting" << endl;
+        return;
+    }
+	
+	reviewsFile >> reviewId;
+	while (!reviewsFile.eof()) {
+		reviewsFile >> movieId;
+		reviewsFile >> rating;
+		
+		// inserting
+		MovieData **dataID = bstID.search(movieId);
+		if (dataID)
+			(*dataID)->numStars[rating-1]++;
+		
+		reviewsFile >> reviewId;
+		numReviews++;
+	}
+	cout << "Num reviews: " << numReviews << endl;
+}
+
+bool isThereCharacter(string input) {
+	for (auto c : input)
+		if (isalpha(c))
+			return true;
+	return false;
 }
 
 
 int main() {
-//	int n = 3;
-//	switch (n) {
-//		case 1:
-//			cout << "1" << endl;
-//			break;
-//		case 2:
-//			cout << "2" << endl;
-//			break;
-//	}
-//	return 0;
-	
-	
-    srand(1);
-    binarysearchtree<int, MovieData> bst;
+    binarysearchtree<int, MovieData> bstID;
+	binarysearchtree<string, MovieData> bstName;
+    string moviesFilename, reviewsFilename, input;
+	MovieData **data;
     
-//    for (int i=0; i<30; i++) {
-//        MovieData m{rand()%100,rand()%100,rand()%100,rand()%100,rand()%100,rand()%100};
-//        bst.insert(rand()%1000, m);
-//    }
-//
-//    bst.inorder();
-//    cout << bst.size() << " " << bst.height() << endl;
-//    displayBST(bst);
-    
-    string moviesFilename; // = "movies1.txt";
-    string reviewsFilename; // = "reviews1.txt";
-    
-    cout << "movies file?> ";
-    if (!DEBUG)
+	if (!DEBUG) {
+		cout << "movies file?> ";
         cin >> moviesFilename;
-    else
+		cout << "reviews file?> ";
+		cin >> reviewsFilename;
+		getline(cin, input);  // discard EOL following last input:
+		cout << endl;
+	} else {
         moviesFilename = "movies1.txt";
+		reviewsFilename = "reviews1.txt";
+	}
     
-    cout << "reviews file?> ";
-    if (!DEBUG)
-        cin >> reviewsFilename;
-    else {
-        reviewsFilename = "reviews1.txt";
-        cout << endl;
-    }
+    InputMovies(moviesFilename, bstID, bstName);
+	inputRating(reviewsFilename, bstID);
+	
+	cout << "\nTree by movie id: size=" << bstID.size() << ", height=" << bstID.height() << endl;
+	cout << "Tree by movie name: size=" << bstName.size() << ", height=" << bstName.height() << endl;
+	
+	while (true) {
+		cout << "\nEnter a movie id or name (or # to quit)> ";
+		getline(cin, input);
+		trim(input);
+		
+		data = isThereCharacter(input) ? bstName.search(input) : bstID.search(atoi(input.c_str()));
+		
+		if (!data) {
+			cout << "not found..." << endl;
+			continue;
+		}
+		
+		double avgRating = (5.0*(*data)->numStars[4] + 4*(*data)->numStars[3] + 3*(*data)->numStars[2] + 2*(*data)->numStars[1] + (*data)->numStars[0])
+							/ ((*data)->numStars[4] + (*data)->numStars[3] + (*data)->numStars[2] + (*data)->numStars[1] + (*data)->numStars[0]);
+		
+		cout << "Movie ID: " << (*data)->id << endl
+			<< "Movie Name: " << (*data)->name << endl
+			<< "Avg rating: " << avgRating << endl
+			<< "5 stars: " << (*data)->numStars[4] << endl
+			<< "4 stars: " << (*data)->numStars[3] << endl
+			<< "3 stars: " << (*data)->numStars[2] << endl
+			<< "2 stars: " << (*data)->numStars[1] << endl
+			<< "1 stars: " << (*data)->numStars[0] << endl;
+	}
     
-    string junk;
-    if (!DEBUG)
-        getline(cin, junk);  // discard EOL following last input:
-    
-    InputMovies(moviesFilename, bst);
-    displayBST(bst);
-    
-    // done:
     return 0;
 }
