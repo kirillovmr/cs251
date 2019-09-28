@@ -9,29 +9,18 @@
 #include <iostream>
 #include <array>
 #include <vector>
-#include <algorithm>
-
 using namespace std;
 
 int main(int argc, const char * argv[]) {
+	int a = 3, b = 4;
 	
-	cin.tie(nullptr);
+	auto f = [a]() mutable -> int { return ++a; };
+	auto g = [&,b]() -> int { return b; };
 	
-//	cin >> a;
+	a = 1; b = 2;
 	
-	cout << unitbuf;
-	cout << "Line 1 " << endl;
-	cout << "Line 2" << flush;
-	cout << "Line 3\n" << ends;
-	
-	vector<int> vec;
-	vec.push_back(2);
-	cout << vec.max_size() << endl;
-	
-	vector<long> vec2;
-	cout << vec2.max_size() << endl;
-	
-	cout << *find(vec.cbegin(), vec.cend(), 2) << endl;
+	cout << f() << endl;
+	cout << g() << endl;
 	
 	return 0;
 }

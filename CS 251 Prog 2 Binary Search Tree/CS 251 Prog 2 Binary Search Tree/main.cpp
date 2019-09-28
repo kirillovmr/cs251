@@ -12,6 +12,7 @@
 #include <fstream>
 #include <string>
 #include <cctype>
+#include <algorithm>
 #include "bst.hpp"
 #define DEBUG 1
 
@@ -24,7 +25,7 @@ struct MovieData {
 };
 
 // trims whitespace from beginning and end of string.
-string trim(const string& str) {
+string trim(const string &str) {
     size_t first = str.find_first_not_of(" \t\n\r");
     size_t last = str.find_last_not_of(" \t\n\r");
     
@@ -38,7 +39,7 @@ string trim(const string& str) {
     return str.substr(first, (last - first + 1));
 }
 
-void InputMovies(string moviesFilename, binarysearchtree<int, MovieData> &bstID, binarysearchtree<string, MovieData> &bstName) {
+void InputMovies(const string &moviesFilename, binarysearchtree<int, MovieData> &bstID, binarysearchtree<string, MovieData> &bstName) {
     ifstream moviesFile(moviesFilename);
     int      id, pubYear;
     string   name;
@@ -65,7 +66,7 @@ void InputMovies(string moviesFilename, binarysearchtree<int, MovieData> &bstID,
 	cout << "Num movies: " << bstID.size() << endl;
 }
 
-void inputRating(string filename, binarysearchtree<int, MovieData> &bstID) {
+void inputRating(const string &filename, binarysearchtree<int, MovieData> &bstID) {
 	ifstream reviewsFile(filename);
     int      reviewId, movieId, rating, numReviews = 0;
     string   name;
@@ -91,8 +92,8 @@ void inputRating(string filename, binarysearchtree<int, MovieData> &bstID) {
 	cout << "Num reviews: " << numReviews << endl;
 }
 
-bool isThereCharacter(string input) {
-	for (auto c : input)
+bool isThereCharacter(string &input) {
+	for (auto &c : input)
 		if (isalpha(c))
 			return true;
 	return false;
@@ -128,6 +129,9 @@ int main() {
 		getline(cin, input);
 		trim(input);
 		
+		if(input == "#")
+			exit(0);
+		
 		data = isThereCharacter(input) ? bstName.search(input) : bstID.search(atoi(input.c_str()));
 		
 		if (!data) {
@@ -135,12 +139,15 @@ int main() {
 			continue;
 		}
 		
-		double avgRating = (5.0*(*data)->numStars[4] + 4*(*data)->numStars[3] + 3*(*data)->numStars[2] + 2*(*data)->numStars[1] + (*data)->numStars[0])
-							/ ((*data)->numStars[4] + (*data)->numStars[3] + (*data)->numStars[2] + (*data)->numStars[1] + (*data)->numStars[0]);
+		auto avgRating = [data] {
+			double r = (5.0*(*data)->numStars[4] + 4*(*data)->numStars[3] + 3*(*data)->numStars[2] + 2*(*data)->numStars[1] + (*data)->numStars[0])
+					/ ((*data)->numStars[4] + (*data)->numStars[3] + (*data)->numStars[2] + (*data)->numStars[1] + (*data)->numStars[0]);
+			return r > 0 ? r : 0;
+		};
 		
 		cout << "Movie ID: " << (*data)->id << endl
 			<< "Movie Name: " << (*data)->name << endl
-			<< "Avg rating: " << avgRating << endl
+			<< "Avg rating: " << avgRating() << endl
 			<< "5 stars: " << (*data)->numStars[4] << endl
 			<< "4 stars: " << (*data)->numStars[3] << endl
 			<< "3 stars: " << (*data)->numStars[2] << endl
