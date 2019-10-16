@@ -27,14 +27,21 @@ private:
     
     std::shared_ptr<Node> Root;
     int Size;
+    bool selfBalance;
     
     void _copyHelper(std::shared_ptr<Node> our, std::shared_ptr<Node> other) {
         if (other->Left) {
-            our->Left = std::shared_ptr<Node>(new Node{other->Left->Key, other->Left->Value, other->Left->Height});
+            our->Left = std::shared_ptr<Node>(new Node);
+            our->Left->Key = other->Left->Key;
+            our->Left->Value = other->Left->Value;
+            our->Left->Height = other->Left->Height;
             _copyHelper(our->Left, other->Left);
         }
         if (other->Right) {
-            our->Right = std::shared_ptr<Node>(new Node{other->Right->Key, other->Right->Value, other->Right->Height});
+            our->Right = std::shared_ptr<Node>(new Node);
+            our->Right->Key = other->Right->Key;
+            our->Right->Value = other->Right->Value;
+            our->Right->Height = other->Right->Height;
             _copyHelper(our->Right, other->Right);
         }
     }
@@ -125,11 +132,14 @@ private:
     }
     
 public:
-    avltree() : Size(0), Root(nullptr) { }
+    avltree() : Size(0), Root(nullptr), selfBalance(true) { }
     
-    avltree(avltree &other) : Size(other.Size), Root(nullptr) {
+    avltree(avltree &other) : Size(other.Size), Root(nullptr), selfBalance(other.selfBalance) {
         if (other.Root != nullptr) {
-            Root = new Node{other.Root->Key, other.Root->Value, other.Root->Height};
+            Root = std::shared_ptr<Node>(new Node);
+            Root->Key = other.Root->Key;
+            Root->Value = other.Root->Value;
+            Root->Height = other.Root->Height;
             _copyHelper(Root, other.Root);
         }
     }
@@ -147,6 +157,7 @@ public:
          //      Thats all we need     //
           //   ❤️ smart pointers ❤️   //
         Root = nullptr;
+        Size = 0;
     }
     
     TValue* search(TKey key) {
@@ -190,7 +201,10 @@ public:
         }
 
         // 2. if we get here, key is not in tree, so allocate a new node to insert:
-        std::shared_ptr<Node> newNode = std::shared_ptr<Node>(new Node{key, value, 0});
+        std::shared_ptr<Node> newNode = std::shared_ptr<Node>(new Node);
+        newNode->Key = key;
+        newNode->Value = value;
+        newNode->Height = 0;
 
         // 3. link in the new node:
         if (prev == nullptr)
@@ -213,7 +227,7 @@ public:
             int newH = 1 + std::max(HL, HR);
             cur->Height = newH;
             
-            if (true) {
+            if (selfBalance) {
                 // Get balance factor
                 int balance = HL - HR;
                 std::shared_ptr<Node> top = nodes.size() ? nodes.top() : nullptr;
@@ -248,7 +262,48 @@ public:
     }
     
     int distance(TKey k1, TKey k2) {
+        if (k1 == k2)
+            return 0;
         
+        std::vector< std::shared_ptr<Node> > pathK1, pathK2;
+        
+        std::shared_ptr<Node> cur;
+        bool found = false;
+        TKey key;
+        
+        // Loop for both keys
+        for (int i=0; i<2; i++, found=false) {
+            key = i == 0 ? k1 : k2;
+            cur = Root;
+
+            while (cur != nullptr) {
+                i == 0 ? pathK1.push_back(cur) : pathK2.push_back(cur);
+                
+                if (key == cur->Key) {
+                    found = true;
+                    break;
+                }
+                else if (key < cur->Key)
+                    cur = cur->Left;
+                else
+                    cur = cur->Right;
+            }
+            if (found)
+                continue;
+            
+            // If here - one of the nodes was not found
+            return -1;
+        }
+        
+        int i;
+        for (i=0; i<std::min(pathK1.size(), pathK2.size()); i++)
+            if (pathK1[i]->Key != pathK2[i]->Key)
+                break;
+    
+        int dist1 = std::max(static_cast<int>(pathK1.size()) - i, 0);
+        int dist2 = std::max(static_cast<int>(pathK2.size()) - i, 0);
+        
+        return dist1 + dist2;
     }
     
     void inorder() {
@@ -273,5 +328,9 @@ public:
         std::vector<int> heights;
         _inorderHeights(Root, heights);
         return heights;
+    }
+    
+    void setSelfBalance(bool balance) {
+        selfBalance = balance;
     }
 };
