@@ -134,7 +134,7 @@ private:
 public:
     avltree() : Size(0), Root(nullptr), selfBalance(true) { }
     
-    avltree(avltree &other) : Size(other.Size), Root(nullptr), selfBalance(other.selfBalance) {
+    avltree(const avltree &other) : Size(other.Size), Root(nullptr), selfBalance(other.selfBalance) {
         if (other.Root != nullptr) {
             Root = std::shared_ptr<Node>(new Node);
             Root->Key = other.Root->Key;
@@ -142,6 +142,18 @@ public:
             Root->Height = other.Root->Height;
             _copyHelper(Root, other.Root);
         }
+    }
+    
+    avltree& operator=(const avltree &other){
+        clear();
+        if (other.Root != nullptr) {
+            Root = std::shared_ptr<Node>(new Node);
+            Root->Key = other.Root->Key;
+            Root->Value = other.Root->Value;
+            Root->Height = other.Root->Height;
+            _copyHelper(Root, other.Root);
+        }
+        return *this;
     }
     
     int size() {

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		C6458DC52356D05D00287F0C /* Rebalancing Tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6E9AD8523567830006F7AB6 /* Rebalancing Tests.cpp */; };
 		C683926323576B5400448B52 /* Misc Tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C683926223576B5400448B52 /* Misc Tests.cpp */; };
-		C68392642357815700448B52 /* BST Test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6E9AD8323566BD3006F7AB6 /* BST Test.cpp */; };
+		C6CA6CA0235C03FB0008E345 /* BST Test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6E9AD8323566BD3006F7AB6 /* BST Test.cpp */; };
 		C6E9AD6823565994006F7AB6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6E9AD6723565994006F7AB6 /* main.cpp */; };
 		C6E9AD7E23566AAD006F7AB6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6E9AD7D23566AAD006F7AB6 /* main.cpp */; };
 /* End PBXBuildFile section */
@@ -37,9 +37,10 @@
 
 /* Begin PBXFileReference section */
 		C683926223576B5400448B52 /* Misc Tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "Misc Tests.cpp"; sourceTree = "<group>"; };
+		C6C54E73235904C600D18906 /* avl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = avl.hpp; sourceTree = "<group>"; };
 		C6E9AD6423565994006F7AB6 /* CS 251 Proj 3 AVL Trees */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "CS 251 Proj 3 AVL Trees"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6E9AD6723565994006F7AB6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		C6E9AD6F235659C4006F7AB6 /* avl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = avl.hpp; sourceTree = "<group>"; };
+		C6E9AD6F235659C4006F7AB6 /* avlMy.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = avlMy.hpp; sourceTree = "<group>"; };
 		C6E9AD7B23566AAD006F7AB6 /* AVL Trees Tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "AVL Trees Tests"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6E9AD7D23566AAD006F7AB6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		C6E9AD8223566AFA006F7AB6 /* catch.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = catch.hpp; sourceTree = "<group>"; };
@@ -87,7 +88,8 @@
 			isa = PBXGroup;
 			children = (
 				C6E9AD6723565994006F7AB6 /* main.cpp */,
-				C6E9AD6F235659C4006F7AB6 /* avl.hpp */,
+				C6E9AD6F235659C4006F7AB6 /* avlMy.hpp */,
+				C6C54E73235904C600D18906 /* avl.hpp */,
 			);
 			path = "CS 251 Proj 3 AVL Trees";
 			sourceTree = "<group>";
@@ -190,7 +192,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C68392642357815700448B52 /* BST Test.cpp in Sources */,
+				C6CA6CA0235C03FB0008E345 /* BST Test.cpp in Sources */,
 				C683926323576B5400448B52 /* Misc Tests.cpp in Sources */,
 				C6458DC52356D05D00287F0C /* Rebalancing Tests.cpp in Sources */,
 				C6E9AD7E23566AAD006F7AB6 /* main.cpp in Sources */,

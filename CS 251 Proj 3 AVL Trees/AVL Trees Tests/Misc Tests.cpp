@@ -93,3 +93,22 @@ TEST_CASE("MISC (3) Distance balance") {
     REQUIRE(avl4.distance(55, 60) == 3);
     REQUIRE(avl4.distance(60, 55) == 3);
 }
+
+TEST_CASE("MISC (4) Basic Distance") {
+    avltree<int, int> avl4;
+    
+    SECTION("Empty tree") {
+        REQUIRE(avl4.distance(1, 2) == -1);
+        REQUIRE(avl4.distance(1, 1) == -1);
+    }
+    
+    SECTION("Root") {
+        avl4.insert(55, 3);
+        REQUIRE(avl4.distance(55, 55) == 0);
+    }
+    
+//    SECTION("Root") {
+//       avl4.insert(55, 3);
+//       REQUIRE(avl4.distance(55, 55) == 0);
+//    }
+}
