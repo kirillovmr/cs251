@@ -8,14 +8,14 @@
 
 #include <string>
 #include <iostream>
-#include "Database.hpp"
+#include "Database.h"
 
 int main(int argc, const char * argv[]) {
     
-    std::string tablename = "students";
+    std::string tablename;// = "students";
 
     std::cout << "Welcome to myDB, please enter tablename> ";
-//    getline(std::cin, tablename);
+    getline(std::cin, tablename);
     
     Database db(tablename);
     db.loop();

@@ -12,11 +12,15 @@
 #include "avl.h"
 
 #include <map>
-#include <mutex>
+#include <queue>
 #include <thread>
 #include <string>
 #include <vector>
+#include <cstdlib>
 #include <fstream>
+#include <sstream>
+#include <iostream>
+#include <algorithm>
 
 typedef avltree<std::string, std::streamoff> dbTree;
 
@@ -26,8 +30,7 @@ private:
     int m_offset, m_numCol;
     std::vector<std::string> m_columns, m_indexColumns;
     std::map<std::string, dbTree> m_trees;
-    std::vector<std::thread> m_threads;
-    std::mutex m_mutexLocker;
+    std::queue<std::thread> m_threads;
     std::vector<std::string> queryPattern{"select","%column_select","from","%table","where","%column_where","=","%value"};
     
     static void _buildTree(dbTree &tree, std::string filename, std::string colName, int offset, std::vector<std::string> &columns);

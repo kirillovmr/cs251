@@ -6,12 +6,7 @@
 //  Copyright © 2019 Viktor Kirillov. All rights reserved.
 //
 
-#include <cstdlib>
-#include <fstream>
-#include <iostream>
-#include <vector>
-#include <sstream>
-#include "Database.hpp"
+#include "Database.h"
 
 #define CHECK_FOR_GOOD_FILE(data, tableName) if (!data.good()) { cout << "**Error: couldn't open data file '" << tableName << "'." << endl; return; }
 #define CHECK_FOR_GOOD_FILE_RET(data, tableName, returnVal) if (!data.good()) { cout << "**Error: couldn't open data file '" << tableName << "'." << endl; return returnVal; }
@@ -35,11 +30,19 @@ Database::Database(std::string filename) : m_name(filename) {
     }
 
     cout << "Building index tree(s)..." << endl;
-    for (auto &col: m_indexColumns)
-        m_threads.push_back( thread(_buildTree, std::ref(m_trees[col]), filename, col, m_offset, std::ref(m_columns)) );
-
-    for (auto &t : m_threads)
-        t.join();
+    int maxThreads = std::max(8, static_cast<int>(thread::hardware_concurrency()));
+    for (auto &col: m_indexColumns) {
+        if (m_threads.size() == maxThreads) {
+            m_threads.front().join();
+            m_threads.pop();
+        }
+        m_threads.push( thread(_buildTree, std::ref(m_trees[col]), filename, col, m_offset, std::ref(m_columns)) );
+    }
+    
+    while (m_threads.size()) {
+        m_threads.front().join();
+        m_threads.pop();
+    }
     
     for (auto &c : m_indexColumns)
         cout << "Index column: " << c << endl << "  Tree size: " << m_trees[c].size() << endl << "  Tree height: " << m_trees[c].height() << endl;
@@ -56,7 +59,7 @@ void Database::_buildTree(dbTree &tree, std::string filename, std::string colNam
     streamoff length = data.tellg(), pos;
     string value;
     
-    for (pos = 0; pos < length; pos += offset-1) {
+    for (pos = 0; pos < length; pos += offset) {
         data.seekg(pos, data.beg);
         for (int i=0; i<columns.size(); i++) {
             data >> value;
@@ -105,7 +108,7 @@ std::vector<std::streamoff> Database::linearSearch(std::string tableName, std::s
     streamoff length = data.tellg(), pos;
     string value;
 
-    for (pos = 0; pos < length; pos += offset-1) {
+    for (pos = 0; pos < length; pos += offset) {
         data.seekg(pos, data.beg);
         for (int i=0; i<columns.size(); i++) {
             data >> value;
@@ -122,7 +125,7 @@ void Database::loop() {
     string query;
     
     while(true) {
-        cout << "\nEnter query>";
+        cout << "\nEnter query> ";
         getline(cin, query);
         
         if (query == "exit") break;
@@ -161,7 +164,8 @@ void Database::loop() {
                 for (auto p : posV) {
                     vector<string> res = getEntry(m_name, p, m_columns.size());
                     for (int i=0; i<res.size(); i++)
-                        cout << m_columns[i] << ": " << res[i] << endl;
+                        if (tokens[1] == "*" || tokens[1] == m_columns[i])
+                            cout << m_columns[i] << ": " << res[i] << endl;
                 }
             }
         }
