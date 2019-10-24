@@ -14,7 +14,7 @@
 
 using namespace std;
 
-Database::Database(std::string filename) : m_name(filename) {
+Database::Database(string filename) : m_name(filename) {
     string colName; int num;
     
     cout << "Reading meta-data..." << endl;
@@ -28,7 +28,7 @@ Database::Database(std::string filename) : m_name(filename) {
         if (num == 1)
             m_indexColumns.push_back(colName);
     }
-
+    
     cout << "Building index tree(s)..." << endl;
     int maxThreads = std::max(8, static_cast<int>(thread::hardware_concurrency()));
     for (auto &col: m_indexColumns) {
@@ -49,7 +49,7 @@ Database::Database(std::string filename) : m_name(filename) {
     
 }
 
-void Database::_buildTree(dbTree &tree, std::string filename, std::string colName, int offset, std::vector<std::string> &columns) {
+void Database::_buildTree(dbTree &tree, string filename, string colName, int offset, vector<string> &columns) {
     
     ifstream data(filename + ".data", ios::in | ios::binary);
     CHECK_FOR_GOOD_FILE(data, filename)
@@ -71,7 +71,7 @@ void Database::_buildTree(dbTree &tree, std::string filename, std::string colNam
 
 }
 
-std::vector<std::string> Database::tokenize(std::string input) {
+vector<string> Database::tokenize(string input) {
     vector<string> tokens;
     stringstream ss(input);
     string token;
@@ -82,7 +82,7 @@ std::vector<std::string> Database::tokenize(std::string input) {
     return tokens;
 }
 
-std::vector<std::string> Database::getEntry(std::string tableName, std::streamoff pos, size_t numColumns) {
+vector<string> Database::getEntry(string tableName, streamoff pos, size_t numColumns) {
     vector<string> entry;
     string value;
     
@@ -97,7 +97,7 @@ std::vector<std::string> Database::getEntry(std::string tableName, std::streamof
     return entry;
 }
 
-std::vector<std::streamoff> Database::linearSearch(std::string tableName, std::string colName, std::vector<std::string> &columns, int offset, std::string matchValue) {
+vector<streamoff> Database::linearSearch(string tableName, string colName, vector<string> &columns, int offset, string matchValue) {
     vector<streamoff> matches;
     
     ifstream data(tableName + ".data", ios::in | ios::binary);

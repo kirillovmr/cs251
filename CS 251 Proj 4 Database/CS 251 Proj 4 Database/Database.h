@@ -22,25 +22,32 @@
 #include <iostream>
 #include <algorithm>
 
-typedef avltree<std::string, std::streamoff> dbTree;
+using std::map;
+using std::queue;
+using std::vector;
+using std::string;
+using std::thread;
+using std::streamoff;
+
+typedef avltree<string, streamoff> dbTree;
 
 class Database {
 private:
-    std::string m_name;
+    string m_name;
     int m_offset, m_numCol;
-    std::vector<std::string> m_columns, m_indexColumns;
-    std::map<std::string, dbTree> m_trees;
-    std::queue<std::thread> m_threads;
-    std::vector<std::string> queryPattern{"select","%column_select","from","%table","where","%column_where","=","%value"};
+    vector<string> m_columns, m_indexColumns;
+    map<string, dbTree> m_trees;
+    queue<thread> m_threads;
+    vector<string> queryPattern{"select","%column_select","from","%table","where","%column_where","=","%value"};
     
-    static void _buildTree(dbTree &tree, std::string filename, std::string colName, int offset, std::vector<std::string> &columns);
-    static std::vector<std::streamoff> linearSearch(std::string tableName, std::string colName, std::vector<std::string> &columns, int offset, std::string matchValue);
-    static std::vector<std::string> getEntry(std::string tableName, std::streamoff pos, size_t numColumns);
-    static std::vector<std::string> tokenize(std::string input);
+    static void _buildTree(dbTree &tree, string filename, string colName, int offset, vector<string> &columns);
+    static vector<streamoff> linearSearch(string tableName, string colName, vector<string> &columns, int offset, string matchValue);
+    static vector<string> getEntry(string tableName, streamoff pos, size_t numColumns);
+    static vector<string> tokenize(string input);
     
 public:
     Database() = default;
-    Database(std::string filename);
+    Database(string filename);
     
     void loop();
 };
