@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <numeric> // accumulate
 #include <fstream>
+#include <random>
 
 #include "Quote.hpp"
 
@@ -32,6 +33,8 @@ int main() {
     Bulk_quote book("book", 20, 10, 0.1);
     cout << book.net_price(10) << endl;
     print_total(cout, book, 11);
+    
+    std::default_random_engine e;
 
     return 0;
 }
