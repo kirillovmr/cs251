@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C692096C237C782E00ECF4F9 /* tickets2.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = C692096B237C778B00ECF4F9 /* tickets2.txt */; };
+		C692096F237C7B8800ECF4F9 /* tickets3.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = C692096D237C785900ECF4F9 /* tickets3.txt */; };
+		C6920970237C7B8800ECF4F9 /* tickets4.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = C692096E237C786500ECF4F9 /* tickets4.txt */; };
 		C69D16EF237A766900C750F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C69D16EE237A766900C750F2 /* main.cpp */; };
 		C69D16F7237A769900C750F2 /* ILplates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C69D16F5237A769900C750F2 /* ILplates.cpp */; };
 		C69D16FA237A7B4400C750F2 /* tickets1.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = C69D16F9237A7B3400C750F2 /* tickets1.txt */; };
@@ -19,6 +22,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				C692096F237C7B8800ECF4F9 /* tickets3.txt in CopyFiles */,
+				C6920970237C7B8800ECF4F9 /* tickets4.txt in CopyFiles */,
+				C692096C237C782E00ECF4F9 /* tickets2.txt in CopyFiles */,
 				C69D16FA237A7B4400C750F2 /* tickets1.txt in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -26,6 +32,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C692096B237C778B00ECF4F9 /* tickets2.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = tickets2.txt; sourceTree = "<group>"; };
+		C692096D237C785900ECF4F9 /* tickets3.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = tickets3.txt; sourceTree = "<group>"; };
+		C692096E237C786500ECF4F9 /* tickets4.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = tickets4.txt; sourceTree = "<group>"; };
 		C69D16EB237A766900C750F2 /* CS 251 Project 5 Hashing */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "CS 251 Project 5 Hashing"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C69D16EE237A766900C750F2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		C69D16F5237A769900C750F2 /* ILplates.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ILplates.cpp; sourceTree = "<group>"; };
@@ -64,11 +73,14 @@
 		C69D16ED237A766900C750F2 /* CS 251 Project 5 Hashing */ = {
 			isa = PBXGroup;
 			children = (
-				C69D16F9237A7B3400C750F2 /* tickets1.txt */,
 				C69D16F8237A770100C750F2 /* hashtable.h */,
 				C69D16F6237A769900C750F2 /* ILplates.h */,
 				C69D16F5237A769900C750F2 /* ILplates.cpp */,
 				C69D16EE237A766900C750F2 /* main.cpp */,
+				C69D16F9237A7B3400C750F2 /* tickets1.txt */,
+				C692096B237C778B00ECF4F9 /* tickets2.txt */,
+				C692096D237C785900ECF4F9 /* tickets3.txt */,
+				C692096E237C786500ECF4F9 /* tickets4.txt */,
 			);
 			path = "CS 251 Project 5 Hashing";
 			sourceTree = "<group>";

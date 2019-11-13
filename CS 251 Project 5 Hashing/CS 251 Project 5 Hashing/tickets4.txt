@@ -1,0 +1,45 @@
+Hashing
+J 70
+Incorrect: Hash function returned -1, but plate 'J 70' is valid.
+Hashing
+U 67
+Incorrect: Hash function returned -1, but plate 'U 67' is valid.
+Hashing
+NNN 28
+Incorrect: Hash function returned -1, but plate 'NNN 28' is valid.
+Hashing
+SSS 3
+Hashing
+HH 95
+Hashing
+690
+Hashing
+ZZZZZ 57
+Incorrect: Hash function returned -1, but plate 'ZZZZZ 57' is valid.
+Hashing
+T 24
+Hashing
+X 60
+Hashing
+VVV 98
+Incorrect: Hash function returned -1, but plate 'VVV 98' is valid.
+Hashing
+KKKKK 11
+Incorrect: Hash function returned -1, but plate 'KKKKK 11' is valid.
+Hashing
+QQQQ 90
+Hashing
+L 50
+Incorrect: Hash function returned -1, but plate 'L 50' is valid.
+Hashing
+JJJJJ 99
+Incorrect: Hash function returned -1, but plate 'JJJJJ 99' is valid.
+Hashing
+KKKKK 8
+Incorrect: Hash function returned -1, but plate 'KKKKK 8' is valid.
+Hashing
+IIIII 68
+Incorrect: Hash function returned -1, but plate 'IIIII 68' is valid.
+Hashing
+YYYYY 61
+Incorrect: Hash function returned -1, but plate 'YYYYY 61' is valid.

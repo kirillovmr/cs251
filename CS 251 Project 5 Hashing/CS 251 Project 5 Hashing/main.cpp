@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <thread>
 #include <random>
 #include <cassert>
 
@@ -30,10 +31,11 @@ void hashInput(string basename, ILplates &hashplates) {
     }
 
     cout << "Reading '" << infilename << "'..." << endl;
-
+    
     string fine, plate;
     getline(infile, fine);
-
+    
+    int total = 0, valid = 0;
     //
     // for each pair (fine, license plate), hash and store/update fine:
     //
@@ -46,26 +48,34 @@ void hashInput(string basename, ILplates &hashplates) {
         //
         // is plate valid?  Only process valid plates:
         //
+        cout << "Hash for " << plate << " is " << hashplates.Hash(plate) << endl;
+        total++;
         if (hashplates.Hash(plate) >= 0) { // yes:
+            valid++;
             int amount = hashplates.Search(plate);
 
             if (amount < 0) {  // not found:
+//                cout << "Insert " << plate << endl;
                 hashplates.Insert(plate, stoi(fine));
             }
             else { // we found it, so update total in hash table:
+//                cout << "Update " << plate << endl;
                 amount += stoi(fine);
                 hashplates.Insert(plate, amount);
             }
-
+        
         }//valid
-
         getline(infile, fine);
     }
+    
+    cout << "\nTotal plates: " << total << endl;
+    cout << "# valid " << valid << endl;
+    cout << "# invalid " << total - valid << endl;
 }
 
 int main() {
     int N = 10000;
-    string basename = "tickets1";
+    string basename = "tickets2";
 
     cout << "Enter hashtable size> ";
 //    cin >> N;

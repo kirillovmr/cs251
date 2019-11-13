@@ -16,6 +16,16 @@
 
 using namespace std;
 
+
+int sdbm(string &str) {
+    int hash = 0;
+
+    for (auto &c : str)
+        hash = c + (hash << 3) + (hash << 5) - hash;
+        
+    return hash < 0 ? hash * -1 : hash;
+}
+
 //
 // Hash:
 //
@@ -37,6 +47,7 @@ using namespace std;
 //
 int ILplates::Hash(string plate) {
     int index = -1;
+//    cout << "Hashing " << endl << plate << endl;
 
     size_t space = plate.find(" ");
     
@@ -44,9 +55,7 @@ int ILplates::Hash(string plate) {
     if (space < plate.size()) {
         string let = plate.substr(0, space);
         string num = plate.substr(space+1);
-        
-        cout << let << ":" << num << endl;
-        
+    
         for (auto &c : let)
             if (c < 'A' || c > 'Z')
                 return -1;
@@ -56,19 +65,16 @@ int ILplates::Hash(string plate) {
                 return -1;
         
         // Case 1
-        if (let.size() >= 1 && let.size() <= 5 && num.size() >= 1 && num.size() <= 2) {
-            
-        }
+        if (let.size() >= 1 && let.size() <= 5 && num.size() >= 1 && num.size() <= 2)
+            index = sdbm(plate);
         // Case 2
-        else if (let.size() == 6 && num.size() == 1) {
-            
-        }
-        
+        else if (let.size() == 6 && num.size() == 1)
+            index = sdbm(plate);
+
     }
     
     // Vanity
     else {
-        
         bool isNumber = plate[0] >= '0' && plate[0] <= '9' ? true : false;
         for (auto &c : plate) {
             if (isNumber && (c < '0' || c > '9'))
@@ -76,21 +82,16 @@ int ILplates::Hash(string plate) {
             else if (!isNumber && (c < 'A' || c > 'Z'))
                 return -1;
         }
-                    
         
         // Case 1
-        if (plate.size() >= 1 && plate.size() <= 3) {
-            
-            
-        }
+        if (plate.size() >= 1 && plate.size() <= 3 && isNumber)
+            index = sdbm(plate);
         // Case 2
-        else if (plate.size() >= 1 && plate.size() <= 7) {
-            
-        }
-        cout << "vanity " << plate << endl;
+        else if (plate.size() >= 1 && plate.size() <= 7 && !isNumber)
+            index = sdbm(plate);
+        
     }
     
-    cout << "ok\n";
     return index % HT.Size();
 }
 
@@ -102,10 +103,19 @@ int ILplates::Hash(string plate) {
 // associated value for this plate if found, or -1 if not found.
 //
 int ILplates::Search(string plate) {
-    //
-    // TODO:
-    //
-
+    int idx = Hash(plate), value;
+    bool empty;
+    string key;
+    
+    HT.Get(idx, empty, key, value);
+    while (!empty) {
+        if (key == plate)
+            return value;
+        
+        idx = ++idx % HT.Size();
+        HT.Get(idx, empty, key, value);
+    }
+    
     return -1;
 }
 
@@ -117,7 +127,18 @@ int ILplates::Search(string plate) {
 // overwriting an existing value if there.
 //
 void ILplates::Insert(string plate, int newValue) {
-    //
-    // TODO:
-    //
+    int idx = Hash(plate), value;
+    bool empty;
+    string key;
+    
+    HT.Get(idx, empty, key, value);
+    while (!empty) {
+        if (key == plate)
+            break;
+        
+        idx = ++idx % HT.Size();
+        HT.Get(idx, empty, key, value);
+    }
+    
+    HT.Set(idx, plate, newValue);
 }

@@ -25,9 +25,12 @@ using std::cout;
 using std::endl;
 using std::vector;
 
+class ILplates;
+
 template<typename TKey, typename TValue>
 class hashtable {
 private:
+    friend class ILplates;
     struct KeyValuePair {
         bool   Empty;
         TKey   Key;
