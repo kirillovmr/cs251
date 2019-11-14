@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <thread>
 #include <random>
+#include <utility>
 #include <cassert>
 
 #include "ILplates.h"
@@ -36,34 +37,23 @@ void hashInput(string basename, ILplates &hashplates) {
     getline(infile, fine);
     
     int total = 0, valid = 0;
-    //
+    
     // for each pair (fine, license plate), hash and store/update fine:
-    //
     while (!infile.eof()) {
         getline(infile, plate);
 
-        //cout << fine << endl;
-        //cout << plate << endl;
-
-        //
-        // is plate valid?  Only process valid plates:
-        //
-        cout << "Hash for " << plate << " is " << hashplates.Hash(plate) << endl;
         total++;
         if (hashplates.Hash(plate) >= 0) { // yes:
             valid++;
             int amount = hashplates.Search(plate);
 
             if (amount < 0) {  // not found:
-//                cout << "Insert " << plate << endl;
                 hashplates.Insert(plate, stoi(fine));
             }
             else { // we found it, so update total in hash table:
-//                cout << "Update " << plate << endl;
                 amount += stoi(fine);
                 hashplates.Insert(plate, amount);
             }
-        
         }//valid
         getline(infile, fine);
     }
@@ -74,28 +64,37 @@ void hashInput(string basename, ILplates &hashplates) {
 }
 
 int main() {
-    int N = 10000;
-    string basename = "tickets2";
+    int N;// = 10000;
+    string basename;// = "tickets2";
 
     cout << "Enter hashtable size> ";
-//    cin >> N;
+    cin >> N;
 
     hashtable<string, int> ht(N);
     ILplates hashplates(ht);
 
     cout << "Enter base filename> ";
-//    cin >> basename;
-    cout << endl;
+    cin >> basename;
 
     // process input file of fines and license plates:
     hashInput(basename, hashplates);
 
-    // debugging:
     vector<string> plates = ht.Keys();
     vector<int> amounts = ht.Values();
-
-    for (size_t i = 0; i < plates.size(); ++i) {
-        cout << plates[i] << ", " << amounts[i] << endl;
+    vector<pair<string, int>> data;
+    
+    for (size_t i = 0; i < plates.size(); ++i)
+        data.push_back({plates[i], amounts[i]});
+    
+    sort(data.begin(), data.end(), [](pair<string,int> &a, pair<string,int> &b){
+        return a.first < b.first;
+    });
+    
+    ofstream outfile(basename + "-output.txt");
+    
+    for (size_t i = 0; i < data.size(); ++i) {
+        cout << data[i].first << ", " << data[i].second << endl;
+        outfile << "\"" << data[i].first << "\"" << " $" << data[i].second << endl;
     }
     
     return 0;

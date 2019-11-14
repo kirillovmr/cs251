@@ -16,7 +16,7 @@
 
 using namespace std;
 
-
+// Based on SDBM Hash function
 int sdbm(string &str) {
     int hash = 0;
 
