@@ -15,7 +15,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <limits>
+#include <climits>
 #include <vector>
 #include <queue>
 #include <map>
