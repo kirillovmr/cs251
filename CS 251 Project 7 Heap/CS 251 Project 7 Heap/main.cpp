@@ -15,19 +15,35 @@ using namespace std;
 
 int main(int argc, const char * argv[]) {
     
-    minqueue<char, int> mq(20);
-    mq.pushinorder('b', 1);
-    mq.pushinorder('a', 1);
-    mq.pushinorder('c', 1);
-    mq.pushinorder('d', 1);
-    mq.pushinorder('e', 1);
-//    mq.minpop();
-    
-    vector<pair<char, int>> v = mq.getArr();
+//    minqueue<char, int> mq(10);
+    minqueue<int, char> mq(vector<int>{123, 456, 789, 1234, 5678, 91011}, '#');
+    vector<pair<int, char> > v = mq.getArr();
+    cout << "Array: ";
     for (auto p : v)
         cout << p.first << ":" << p.second << ", ";
     cout << endl;
-    cout << mq.minfront() << endl;
     
+    
+    char a; int b;
+    while(true) {
+        cin >> a;
+        if (a == 'p') {
+            cin >> a >> b;
+            mq.pushinorder(a, b);
+        }
+        if (a == 'f') {
+            cout << "Front: " << mq.minfront() << endl;
+        }
+        if (a == 'o') {
+            mq.minpop();
+        }
+        
+        v = mq.getArr();
+        cout << "Array: ";
+        for (auto p : v)
+            cout << p.first << ":" << p.second << ", ";
+        cout << endl;
+    }
+
     return 0;
 }

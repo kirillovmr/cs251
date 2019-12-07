@@ -169,7 +169,7 @@ private:
     
     vector<char> Dijkstra(graph &g, char &startV, map<char, int> &distances, map<char, int> &cameTo) {
         vector<char> visited, neighbors;
-        minqueue<char, int> minQ;
+        minqueue<char, int> minQ(30);
 //        map<char, int> distances;
 //        map<char, int> cameTo;
         

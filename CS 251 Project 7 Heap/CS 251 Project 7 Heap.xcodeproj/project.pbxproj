@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C6512E862399B7EA00B65187 /* minqueue.c in Sources */ = {isa = PBXBuildFile; fileRef = C6512E852399B7EA00B65187 /* minqueue.c */; };
 		C6D1578F2397028F00E9ACBB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6D1578E2397028F00E9ACBB /* main.cpp */; };
 		C6D1579C239702E700E9ACBB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6D1579B239702E700E9ACBB /* main.cpp */; };
 		C6D157A32397034100E9ACBB /* t1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6D157A12397034100E9ACBB /* t1.cpp */; };
@@ -34,6 +35,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C6512E852399B7EA00B65187 /* minqueue.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = minqueue.c; sourceTree = "<group>"; };
 		C6D1578B2397028F00E9ACBB /* CS 251 Project 7 Heap */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "CS 251 Project 7 Heap"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6D1578E2397028F00E9ACBB /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		C6D15799239702E700E9ACBB /* Test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Test; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,6 +85,7 @@
 			isa = PBXGroup;
 			children = (
 				C6D157A5239703B200E9ACBB /* minqueue.h */,
+				C6512E852399B7EA00B65187 /* minqueue.c */,
 				C6D1578E2397028F00E9ACBB /* main.cpp */,
 			);
 			path = "CS 251 Project 7 Heap";
@@ -176,6 +179,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6512E862399B7EA00B65187 /* minqueue.c in Sources */,
 				C6D1578F2397028F00E9ACBB /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
