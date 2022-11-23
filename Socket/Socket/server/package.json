@@ -16,6 +16,6 @@
     "express": "^4.17.1",
     "lodash": "^4.17.11",
     "nodemon": "^1.19.4",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.5.0"
   }
 }
